@@ -1,5 +1,7 @@
 package com.newton.resources;
 
+import com.newton.exceptions.EmptyList;
+import com.newton.exceptions.InvalidListIndex;
 import com.newton.interfaces.IList;
 
 public class List implements IList {
@@ -52,7 +54,11 @@ public class List implements IList {
     }
 
     @Override
-    public void addElement(Node node, Integer index) {
+    public void addElement(Node node, Integer index) throws InvalidListIndex {
+        if (index > this.length || index < 0) {
+            throw new InvalidListIndex("addElement(): Invalid Index");
+        }
+
         if (index < this.length) {
             Node current_node_in_index = findElementByIndex(this.first_sentinel, index);
 
@@ -77,7 +83,11 @@ public class List implements IList {
     }
 
     @Override
-    public void addElement(Integer value, Integer index) {
+    public void addElement(Integer value, Integer index) throws InvalidListIndex {
+        if (index > this.length || index < 0) {
+            throw new InvalidListIndex("addElement(): Invalid Index");
+        }
+
         Node node = new Node(value);
 
         if (index < this.length) {
@@ -89,22 +99,25 @@ public class List implements IList {
                 current_node_in_index.setPrevious(node);
                 node.setPrevious(previous_node);
                 node.setNext(current_node_in_index);
-            } else {
-                System.out.println();
             }
         } else if (index == this.length) {
             this.last_sentinel.setNext(node);
             node.setPrevious(this.last_sentinel);
             this.last_sentinel = node;
-        } else {
-            System.out.println();
         }
 
         this.length++;
     }
 
     @Override
-    public Node removeElement(Integer index) {
+    public Node removeElement(Integer index) throws InvalidListIndex, EmptyList {
+        if (index > this.length || index < 0) {
+            throw new InvalidListIndex("removeElement(): Invalid Index");
+        }
+        if (this.length == 0) {
+            throw new EmptyList("removeElement(): Empty List");
+        }
+
         Node removed_element = this.findElementByIndex(this.first_sentinel, index);
 
         if (removed_element != null) {
@@ -130,8 +143,17 @@ public class List implements IList {
 //    }
 
     private void remove(Node removed_element) {
-        removed_element.getPrevious().setNext(removed_element.getNext());
-        removed_element.getNext().setPrevious(removed_element.getPrevious());
+        if (removed_element.getPrevious() != null) {
+            removed_element.getPrevious().setNext(removed_element.getNext());
+        }
+        if (removed_element.getNext() != null) {
+            removed_element.getNext().setPrevious(removed_element.getPrevious());
+        }
+        if (this.length == 1) {
+            this.first_sentinel = null;
+            this.last_sentinel = null;
+        }
+
         removed_element.setPrevious(null);
         removed_element.setNext(null);
     }
@@ -153,7 +175,11 @@ public class List implements IList {
     }
 
     @Override
-    public Node findElementByIndex(Node current_node, Integer index) {
+    public Node findElementByIndex(Node current_node, Integer index) throws InvalidListIndex {
+        if (index > this.length || index < 0) {
+            throw new InvalidListIndex("findElementByIndex(): Invalid Index");
+        }
+
         if (index != 0) {
             return findElementByIndex(current_node.getNext(), --index);
         }

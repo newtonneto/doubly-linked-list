@@ -1,5 +1,7 @@
 package com.newton.tests;
 
+import com.newton.exceptions.EmptyList;
+import com.newton.exceptions.InvalidListIndex;
 import com.newton.interfaces.ITest;
 import com.newton.resources.List;
 import com.newton.resources.Node;
@@ -98,5 +100,38 @@ public class Test implements ITest {
         list.print();
 
         System.out.println("List Length: " + list.listLength());
+    }
+
+    @Override
+    public void executeTestTwo() {
+        //Cria a lista e adiciona um elemento
+        List list = new List();
+        list.addElement(1);
+        list.print();
+
+        //Tenta remover dois elementos
+        try {
+            System.out.println(list.removeElement(0));
+            System.out.println(list.removeElement(0));
+        } catch (EmptyList e) {
+            System.out.println(e);
+        } catch (InvalidListIndex e) {
+            System.out.println(e);
+        }
+
+        //Adiciona um valor a lista
+        list.addElement(1);
+        list.print();
+
+        //Tenta remover um index que não existe
+        try {
+            System.out.println(list.removeElement(5));
+        } catch (EmptyList e) {
+            System.out.println(e);
+        } catch (InvalidListIndex e) {
+            System.out.println(e);
+        }
+
+        list.print();
     }
 }

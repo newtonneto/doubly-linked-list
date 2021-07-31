@@ -8,5 +8,6 @@ public class Main {
         Test test = new Test();
 
         test.executeTestOne();
+        test.executeTestTwo();
     }
 }
